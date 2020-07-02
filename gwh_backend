@@ -1,0 +1,178 @@
+import unittest
+import requests
+import json
+import random
+
+
+host = 'http://li1851-218.members.linode.com:8080'
+tokenRole1 = '0ABE43F96784199FEDDEC3F83B71C986'
+projectId = '2'
+projectName = 'testcase建案4'
+
+
+class TestProject(unittest.TestCase):
+
+    def test_post_createproject(self):
+        url = f'{host}/v1/project'
+        r = requests.post(
+            url, data=json.dumps({
+                "name": f'{projectName}'
+            }),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'project'})
+        self.assertEqual(set(resp['project'].keys()), {'id'})
+
+
+    def test_put_projectname(self):
+        url = f'{host}/v1/project/{projectId}/action/name'
+        r = requests.put(
+            url, data=json.dumps({
+                "name": "建案test_edit"
+            }),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'project'})
+        self.assertEqual(set(resp['project'].keys()), {'id'})
+
+    def test_put_project_firstPicPath(self):
+        url = f'{host}/v1/project/{projectId}/action/firstPicPath'
+        r = requests.put(
+            url, data=json.dumps({
+                "firstPicPath": "/images/homeLarge/4/1024*603.jpg",
+            }),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'project'})
+        self.assertEqual(set(resp['project'].keys()), {'id'})
+
+    def test_put_project_introduceProjectAlbum(self):
+        url = f'{host}/v1/project/{projectId}/action/introduceProjectAlbum'
+        r = requests.put(
+            url, data=json.dumps({
+                "ids": "1,2"
+            }),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'project'})
+        self.assertEqual(set(resp['project'].keys()), {'id'})
+
+    def test_put_project_introducePlanAlbum(self):
+        url = f'{host}/v1/project/{projectId}/action/introducePlanAlbum'
+        r = requests.put(
+            url, data=json.dumps({
+                "ids": "1,2"
+            }),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'project'})
+        self.assertEqual(set(resp['project'].keys()), {'id'})
+
+    def test_put_project_introduceEvnAlbum(self):
+        url = f'{host}/v1/project/{projectId}/action/introduceEvnAlbum'
+        r = requests.put(
+            url, data=json.dumps({
+                "ids": "1,2"
+            }),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'project'})
+        self.assertEqual(set(resp['project'].keys()), {'id'})
+
+    def test_get_projectalbum(self):
+        url = f'{host}/v1/project/{projectId}/album'
+        r = requests.get(
+            url, headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'album'})
+        # self.assertEqual(set(resp['album'].keys()), {'id', 'path'})
+
+
+class TestProjectPhoto(unittest.TestCase):
+    def test_post_thumbnail(self):
+        url = f'{host}/v1/project/{projectId}/thumbnail'
+        r = requests.post(
+            url, data=json.dumps(
+                {
+                    'file': {"file": ("370*530.jpg", open(":/Users/serena/Desktop/各尺寸測試圖片/370*530.png", "rb"), "image/jpeg", {})}
+                }),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'album'})
+        self.assertEqual(set(resp['album'].keys()), {'path'})
+
+
+    def test_post_sortalbumphoto(self):
+        url = f'{host}/v1/project/{projectId}/thumbnail'
+        r = requests.post(
+            url, data=
+                {
+                    'file': {"file": ("370*530.jpg", open("/Users/serena/PycharmProjects/testphoto/370*530.png", "rb"), "image/jpeg", {})}
+                },
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': f'{tokenRole1}'
+            }
+        )
+
+        resp = json.loads(r.text)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(resp['code'], 0)
+        self.assertEqual(set(resp.keys()), {'code', 'album'})
+        self.assertEqual(set(resp['album'].keys()), {'path'})
+
+
+if __name__ == '__main__':
+    unittest.main()
